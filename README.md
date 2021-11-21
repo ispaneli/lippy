@@ -1,5 +1,4 @@
 [![pypi version](https://img.shields.io/pypi/v/lippy)](https://pypi.org/project/lippy)
-[![pypi downloads](https://img.shields.io/pypi/dm/lippy)](https://pypi.org/project/lippy)
 
 # LipPy
 A module for solving **linear programming problems** on Python.
