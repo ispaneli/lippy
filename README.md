@@ -6,7 +6,7 @@ A module for solving **linear programming problems** on Python.
 
 ## Install
 ```shell script
-pip install text-classification-baseline
+pip install lippy
 ```
 
 ## How to use
