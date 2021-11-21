@@ -1,0 +1,3 @@
+FULL_LOG = 2
+MEDIUM_LOG = 1
+LOG_OFF = 0
