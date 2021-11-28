@@ -56,26 +56,27 @@ class BruteForce:
         if self.log_mode in [FULL_LOG, MEDIUM_LOG]:
             print(f"The upper bound of values for all variables {self.var_tag}: {limit_value}.\n")
 
-        for index, test_solution in enumerate(itertools.product(np.arange(limit_value + 1), repeat=self.num_of_vars)):
+        index = 1
+        for test_solution in itertools.product(np.arange(limit_value + 1), repeat=self.num_of_vars):
             test_solution = np.array(test_solution)
-            func_value = sum(test_solution * self.c_vec)
 
-            if self.log_mode == FULL_LOG:
-                print(f"{index + 1}) Solution: {test_solution}, F = {func_value}:")
+            if self._check_solution(test_solution):
+                func_value = sum(test_solution * self.c_vec)
 
-            if (simplex_func_value > 0 and func_value > self._func_value)\
-                    or (simplex_func_value <= 0 and func_value < self._func_value):
-                if self._check_solution(test_solution):
+                if self.log_mode == FULL_LOG:
+                    print(f"{index}) Solution: {test_solution}, F = {func_value}:")
+                    index += 1
+
+                if (simplex_func_value > 0 and func_value > self._func_value)\
+                        or (simplex_func_value <= 0 and func_value < self._func_value):
                     self._func_value = func_value
                     self._solution = test_solution
+
                     if self.log_mode == FULL_LOG:
                         print("     - Found a better solution.\n")
                 else:
                     if self.log_mode == FULL_LOG:
-                        print("     - Does not satisfy the system of restrictions.\n")
-            else:
-                if self.log_mode == FULL_LOG:
-                    print("     - Not the best solution.\n")
+                        print("     - Not the best solution.\n")
 
         if self.log_mode in [FULL_LOG, MEDIUM_LOG]:
             print("\nSolution of the integer problem of linear programming:")

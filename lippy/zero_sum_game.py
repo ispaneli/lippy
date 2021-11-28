@@ -23,7 +23,7 @@ class ZeroSumGame:
         :param log_mode: So much information about the solution to write to the console.
         """
         self.matrix = np.array(matrix, dtype=np.float64)
-        self.strategies = list()
+        self.optimal_strategies = list()
 
         self.var_tag = var_tag
         self.func_tag = func_tag
@@ -35,32 +35,31 @@ class ZeroSumGame:
 
         :return: Optimal strategies.
         """
-        self._solve_for_player(self.matrix.T)
+        self._solve_for_player(-np.ones(self.matrix.shape[0]), -self.matrix.T, -np.ones(self.matrix.shape[1]))
         if self.log_mode in [FULL_LOG, MEDIUM_LOG]:
-            print(f"Winning strategy for the first player: {np.around(self.strategies[0], 3)}\n\n")
+            print(f"Winning strategy for the first player: {np.around(self.optimal_strategies[0], 3)}\n\n")
 
-        self._solve_for_player(self.matrix)
+        self._solve_for_player(np.ones(self.matrix.shape[1]), self.matrix, np.ones(self.matrix.shape[0]))
         if self.log_mode in [FULL_LOG, MEDIUM_LOG]:
-            print(f"Winning strategy for the second player: {np.around(self.strategies[1], 3)}\n\n")
+            print(f"Winning strategy for the second player: {np.around(self.optimal_strategies[1], 3)}\n\n")
 
-        return self.strategies
+        return self.optimal_strategies
 
-    def _solve_for_player(self, matrix: np.ndarray) -> None:
+    def _solve_for_player(self, c_vec: np.ndarray, matrix: np.ndarray, b_vec: np.ndarray) -> None:
         """
         Finds optimal strategies for a player.
 
+        :param c_vec: Coefficients of the equation.
         :param matrix: Game's payoff matrix.
+        :param b_vec: The right part of the restriction system.
         :return: None
         """
-        b_vec = np.ones(matrix.shape[0])
-        c_vec = np.ones(matrix.shape[1])
-
         simplex = SimplexMethod(c_vec, matrix, b_vec, var_tag=self.var_tag,
                                 func_tag=self.func_tag, log_mode=self.log_mode)
         simplex.solve()
 
-        h = 1 / simplex.get_func_value()
+        h = abs(1 / simplex.get_func_value())
         if self.log_mode == FULL_LOG:
             print(f"h = {round(h, 3)}")
         solution = simplex.get_solution() * h
-        self.strategies.append(solution)
+        self.optimal_strategies.append(solution)

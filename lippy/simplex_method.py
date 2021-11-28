@@ -114,13 +114,30 @@ class SimplexMethod:
         """
         if _num_of_vars is None:
             _num_of_vars = self.c_vec.shape[0]
+        solution = self.get_solution(_num_of_vars)
 
-        around_solution = np.around(self.get_solution(_num_of_vars), 3)
+        # 1. Checking the equation.
+        around_solution = np.around(solution, 3)
         var_tags = [f"{self.table.var_tag}{i + 1}" for i in range(_num_of_vars)]
 
         equation_1 = " + ".join([f"{c}*{v}" for c, v in zip(self.c_vec, var_tags)])
         equation_2 = " + ".join([f"{c}*{v}" for c, v in zip(self.c_vec, around_solution)])
         func_value = round(sum([c * v for c, v in zip(self.c_vec, around_solution)]), 3)
 
-        print("Solution check:")
-        print(f"{self.table.func_tag} = {equation_1} = {equation_2} = {func_value}\n")
+        print("Solution check:\n1. Function:")
+        print(f"      • {self.table.func_tag} = {equation_1} = {equation_2} = {func_value}")
+
+        # 2. Checking the restriction system.
+        print("2. Restriction system:")
+
+        b_test = np.sum(self.a_matrix * solution, axis=1)
+        vec_of_comparisons = (b_test <= self.b_vec)
+
+        for a_row_i, b_i, answer in zip(self.a_matrix, self.b_vec, vec_of_comparisons):
+            equation_i = list()
+            for x_i, a_i in zip(around_solution, a_row_i):
+                if x_i != 0 and a_i != 0:
+                    equation_i.append(f"{a_i}*{x_i}")
+
+            print("      • " + " + ".join(equation_i) + f" <= {b_i}, <-- {bool(answer)}")
+

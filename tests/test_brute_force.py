@@ -12,7 +12,7 @@ class TestBruteForce(unittest.TestCase):
                     [0, 0.5, 3]]
         b_vec = [3, 5, 7]
 
-        force = lp.BruteForce(c_vec, a_matrix, b_vec)
+        force = lp.BruteForce(c_vec, a_matrix, b_vec, log_mode=lp.FULL_LOG)
         solution, func_value = force.solve()
 
         self.assertEqual(solution.tolist(), [0, 1, 2])
