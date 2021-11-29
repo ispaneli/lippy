@@ -1,10 +1,11 @@
 from typing import List
 
-from .simplex_method import SimplexMethod
-from ._log_modes import FULL_LOG, MEDIUM_LOG, LOG_OFF
-
 import itertools
 import numpy as np
+import prettytable
+
+from .simplex_method import SimplexMethod
+from ._log_modes import FULL_LOG, MEDIUM_LOG, LOG_OFF
 
 
 class BruteForce:
@@ -20,7 +21,6 @@ class BruteForce:
                  var_tag: str = "x", func_tag: str = "F", log_mode: int = LOG_OFF):
         """
         Initialization of an object of the "Brute Force" class.
-
         :param func_vec: Coefficients of the equation.
         :param conditions_matrix: The left part of the restriction system.
         :param constraints_vec: The right part of the restriction system.
@@ -37,13 +37,13 @@ class BruteForce:
         self.func_tag = func_tag
         self.log_mode = log_mode
 
+        self._nodes = list()
         self._solution = NotImplemented
         self._func_value = NotImplemented
 
     def solve(self) -> (np.ndarray, np.float64):
         """
         Solves the problem of integer linear programming by the method of full iteration.
-
         :return: The solution and the value of the function.
         """
         simplex = SimplexMethod(self.c_vec, self.a_matrix, self.b_vec, var_tag=self.var_tag,
@@ -53,30 +53,29 @@ class BruteForce:
         simplex_func_value = simplex.get_func_value()
         self._func_value = -np.inf if simplex_func_value > 0 else np.inf
         limit_value = np.ceil(simplex_func_value / self.c_vec.min())
-        if self.log_mode in [FULL_LOG, MEDIUM_LOG]:
+        if self.log_mode == FULL_LOG:
             print(f"The upper bound of values for all variables {self.var_tag}: {limit_value}.\n")
 
-        index = 1
         for test_solution in itertools.product(np.arange(limit_value + 1), repeat=self.num_of_vars):
-            test_solution = np.array(test_solution)
+            test_solution_np = np.array(test_solution)
 
-            if self._check_solution(test_solution):
-                func_value = sum(test_solution * self.c_vec)
-
-                if self.log_mode == FULL_LOG:
-                    print(f"{index}) Solution: {test_solution}, F = {func_value}:")
-                    index += 1
+            if self._check_solution(test_solution_np):
+                func_value = sum(test_solution_np * self.c_vec)
+                new_node = [int(s) for s in test_solution] + [func_value]
+                self._nodes.append(new_node)
 
                 if (simplex_func_value > 0 and func_value > self._func_value)\
                         or (simplex_func_value <= 0 and func_value < self._func_value):
                     self._func_value = func_value
-                    self._solution = test_solution
+                    self._solution = test_solution_np
 
-                    if self.log_mode == FULL_LOG:
-                        print("     - Found a better solution.\n")
-                else:
-                    if self.log_mode == FULL_LOG:
-                        print("     - Not the best solution.\n")
+        if self.log_mode == FULL_LOG:
+            print("Table of solutions:")
+            field_names = [f"{simplex.table.var_tag}{i + 1}" for i in range(self.c_vec.shape[0])]
+            field_names.append(simplex.table.func_tag)
+            solutions_table = prettytable.PrettyTable(field_names=field_names)
+            solutions_table.add_rows(self._nodes)
+            print(solutions_table, "\n")
 
         if self.log_mode in [FULL_LOG, MEDIUM_LOG]:
             print("\nSolution of the integer problem of linear programming:")
@@ -89,7 +88,6 @@ class BruteForce:
     def _check_solution(self, solution: np.ndarray) -> bool:
         """
         Checks the solution for compliance with a system of equations with constraints.
-
         :param solution: Integer values of variables.
         :return: True - if the solution satisfies the system of constraints; False - else.
         """
@@ -100,7 +98,6 @@ class BruteForce:
     def get_solution(self) -> np.ndarray:
         """
         Return solution of problem of linear programming.
-
         :return: Solution of problem of linear programming
         """
         return self._solution
@@ -108,7 +105,6 @@ class BruteForce:
     def get_func_value(self) -> np.float64:
         """
         Return the value of the function.
-
         :return: The value of the function.
         """
         return self._func_value
