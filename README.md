@@ -35,7 +35,7 @@ Provides:
 3. [Branch and bound in integer linear programming](#branch-and-bound-in-integer-linear-programming)
 4. [Brute force method in integer linear programming](#brute-force-method-in-integer-linear-programming)
 5. [Cutting-plane method in integer linear programming](#cutting-plane-method-in-integer-linear-programming)
-6. [Zero-sum game in game theory (using Simplex method)](#zero-sum-game-in-game-theory-using-simplex-method)
+6. [Zero-sum game in game theory using Simplex method](#zero-sum-game-in-game-theory-using-simplex-method)
 
 ---
 
