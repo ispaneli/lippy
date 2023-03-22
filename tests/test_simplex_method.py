@@ -1,15 +1,19 @@
 import unittest
 
-import lippy as lp
+import src.lippy as lp
 
 
 class TestSimplexMethod(unittest.TestCase):
-    """Class for testing Simplex Method."""
+    """
+    Class for testing Simplex Method.
+    """
     def test_primal_linear_programming(self):
         c_vec = [6, 6, 6]
-        a_matrix = [[4, 1, 1],
-                    [1, 2, 0],
-                    [0, 0.5, 4]]
+        a_matrix = [
+            [4, 1, 1],
+            [1, 2, 0],
+            [0, 0.5, 4]
+        ]
         b_vec = [5, 3, 8]
 
         simplex = lp.SimplexMethod(c_vec, a_matrix, b_vec)
@@ -23,9 +27,11 @@ class TestSimplexMethod(unittest.TestCase):
 
     def test_dual_linear_programming(self):
         c_vec = [6, 6, 6]
-        a_matrix = [[4, 1, 1],
-                    [1, 2, 0],
-                    [0, 0.5, 4]]
+        a_matrix = [
+            [4, 1, 1],
+            [1, 2, 0],
+            [0, 0.5, 4]
+        ]
         b_vec = [5, 3, 8]
 
         c_vec, a_matrix, b_vec = lp.primal_to_dual_lp(c_vec, a_matrix, b_vec)
