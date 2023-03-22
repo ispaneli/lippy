@@ -1,15 +1,19 @@
 import unittest
 
-import lippy as lp
+import src.lippy as lp
 
 
 class TestBranchAndBound(unittest.TestCase):
-    """Class for testing Branch and Bound algorithm."""
+    """
+    Class for testing Branch and Bound algorithm.
+    """
     def test_usual_case(self):
         c_vec = [3, 3, 7]
-        a_matrix = [[1, 1, 1],
-                    [1, 4, 0],
-                    [0, 0.5, 3]]
+        a_matrix = [
+            [1, 1, 1],
+            [1, 4, 0],
+            [0, 0.5, 3]
+        ]
         b_vec = [3, 5, 7]
 
         bab = lp.BranchAndBound(c_vec, a_matrix, b_vec)

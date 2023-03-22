@@ -7,6 +7,9 @@
   <em>Lippy - solving linear programming problems.</em>
 </p>
 <p align="center">
+  <a href="https://github.com/ispaneli/lippy/actions?query=workflow%3ATests+event%3Apush+branch%3Amaster" target="_blank">
+      <img src="https://github.com/ispaneli/lippy/workflows/Tests/badge.svg?event=push&branch=master" alt="Tests">
+  </a>
   <a href="https://pypi.org/project/lippy" target="_blank">
     <img src="https://img.shields.io/pypi/v/lippy?color=%2334D058&label=pypi%20package" alt="Package version">
   </a>
@@ -161,25 +164,25 @@ strategies = game.solve()
 
 ## Logging
 
-Exists logging modes:
-1. lp.FULL_LOG
-2. lp.MEDIUM_LOG
-3. lp.LOG_OFF *(default)*
+Existing logging modes:
+1. FULL_LOG
+2. MEDIUM_LOG
+3. LOG_OFF *(default)*
 
 Logging is set when initializing a class object.
 
 For example:
 
 ```python
-simplex = lp.SimplexMethod(c_vec, a_matrix, b_vec, log_mode=lp.FULL_LOG)
+simplex = lp.SimplexMethod(c_vec, a_matrix, b_vec, log_mode=lp.LogMode.FULL_LOG)
 ```
 
 ```python
-bab = lp.BranchAndBound(c_vec, a_matrix, b_vec, log_mode=lp.FULL_LOG)
+bab = lp.BranchAndBound(c_vec, a_matrix, b_vec, log_mode=lp.LogMode.MEDIUM_LOG)
 ```
 
 ---
 
 ## License
 
-This project is licensed under the terms of the [MIT license](https://github.com/ispaneli/fstorage/blob/master/LICENSE).
+This project is licensed under the terms of the [MIT license](https://github.com/ispaneli/lippy/blob/master/LICENSE).
